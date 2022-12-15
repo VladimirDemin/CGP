@@ -1,4 +1,4 @@
-#include "plotarea.h"
+#include "graph.h"
 #include <QPainter>
 #include <QPainterPath>
 #include <QMessageBox>
@@ -37,7 +37,7 @@ void PlotArea::drawBox(QPainter& p)
 }
 void PlotArea::drawGrid(QPainter& p)
 {
-    QPen gridPen(gridColor);
+    QPen gridPen(Qt::black);
     gridPen.setWidth(grid_line_width);
     p.setPen(gridPen);
     int i = 0;
@@ -57,126 +57,29 @@ void PlotArea::drawGrid(QPainter& p)
 }
 void PlotArea::drawAxis(QPainter& p)
 {
-    /*auto f = [this, &p](Point const& point, QColor color){
-        double vx = point.getParameter(0);
-        double vy = point.getParameter(1);
-        double x = 0;
-        double y = 0;
-        if (vx == 0)
-        {
-            x = width() / 2;
-            y = 0;
-        }
-        else
-        {
-            double t = -zx / vx;
-            y = zy + vy * t;
-            if (y < 0 || y > height())
-            {
-                if (vy == 0)
-                {
-                    y = zy;
-                    x = 0;
-                }
-                else
-                {
-                    t = -zy / vy;
-                    y = 0;
-                    x = zx + vx * t;
-                }
-            }
-        }
-        QPen axisPen(color);
-        axisPen.setWidth(axis_width);
-        p.setPen(axisPen);
-        p.drawLine(x, height() - y, width() - x, y);
-    };*/
-    //f(axis[0], Qt::blue);
-    //f(axis[1], Qt::green);
-    //f(axis[2], Qt::magenta);
     QPointF center(zx, zy);
 
 
-    QPen axisPen(XColor);
+    QPen axisPen(Qt::black);
     axisPen.setWidth(axis_width);
 
     p.setPen(axisPen);
     p.drawLine(Adjust(Point(-axis_length, 0, 0)), Adjust(Point(axis_length, 0, 0)));
 
-    axisPen.setColor(YColor);
+    axisPen.setColor(Qt::black);
     p.setPen(axisPen);
     p.drawLine(Adjust(Point(0, -axis_length, 0)), Adjust(Point(0, axis_length, 0)));
 
-    axisPen.setColor(ZColor);
+    axisPen.setColor(Qt::black);
     p.setPen(axisPen);
     p.drawLine(Adjust(Point(0, 0, -axis_length)), Adjust(Point(0, 0, axis_length)));
 
-    axisPen.setColor(axisColor);
+    axisPen.setColor(Qt::black);
     p.setPen(axisPen);
     p.drawLine(center, Adjust({1, 0, 0}));
     p.drawLine(center, Adjust({0, 1, 0}));
     p.drawLine(center, Adjust({0, 0, 1}));
 
-}
-void PlotArea::drawTicks(QPainter& p)
-{
-    QPen ticksPen(axisColor);
-    ticksPen.setWidth(axis_width);
-    p.setPen(ticksPen);
-    QFont font = p.font();
-    font.setPixelSize(12);
-    p.setFont(font);
-    //ticks x
-    int alignFlags = Qt::AlignRight | Qt::AlignTop;
-    p.drawText(QRect{zx  - u + pixel_width, zy + pixel_width, u - pixel_width, u - pixel_width}, alignFlags, QString::number(0));
-    for (int i = 1; i <= axis_length; ++i)
-    {
-        p.drawLine(Adjust(Point(i, 0, -tick_length / 2)), Adjust(Point(i, 0, tick_length / 2)));
-        p.drawLine(Adjust(Point(-i, 0, -tick_length / 2)), Adjust(Point(-i, 0, tick_length / 2)));
-    }
-    //ticks y
-    for (int i = 1; i <= axis_length; ++i)
-    {
-        p.drawLine(Adjust(Point(0, i, -tick_length / 2)), Adjust(Point(0, i, tick_length / 2)));
-        p.drawLine(Adjust(Point(0, -i, -tick_length / 2)), Adjust(Point(0, -i, tick_length / 2)));
-    }
-    //ticks z
-    for (int i = 1; i <= axis_length; ++i)
-    {
-        p.drawLine(Adjust(Point(-tick_length / 2, 0, i)), Adjust(Point(tick_length / 2, 0, i)));
-        p.drawLine(Adjust(Point(-tick_length / 2, 0, -i)), Adjust(Point(tick_length / 2, 0, -i)));
-    }
-}
-void PlotArea::drawArrows(QPainter& p)
-{
-    QPen arrowsPen(axisColor);
-    arrowsPen.setWidth((axis_width));
-    p.setBrush(QBrush(axisColor));
-    p.setRenderHint(QPainter::RenderHint::Antialiasing);
-    //arrow x
-    QPainterPath px;
-    px.moveTo(Adjust(Point(axis_length, 0, -tick_length / 2)));
-    px.lineTo(Adjust(Point(axis_length + 1, 0, 0)));
-    px.lineTo(Adjust(Point(axis_length, 0, tick_length / 2)));
-    px.lineTo(Adjust(Point(axis_length, 0, -tick_length / 2)));
-    p.drawPath(px);
-    p.drawText(Adjust(Point(axis_length + 1.5, 1, 0)), "X");
-    //arrow y
-    QPainterPath py;
-    py.moveTo(Adjust(Point(0, axis_length, -tick_length / 2)));
-    py.lineTo(Adjust(Point(0, axis_length + 1, 0)));
-    py.lineTo(Adjust(Point(0, axis_length, tick_length / 2)));
-    py.lineTo(Adjust(Point(0, axis_length, -tick_length / 2)));
-    p.drawPath(py);
-    p.drawText(Adjust(Point(0, axis_length + 1.5, 0)), "Y");
-    //arrow z
-    QPainterPath pz;
-    pz.moveTo(Adjust(Point(-tick_length / 2, 0, axis_length)));
-    pz.lineTo(Adjust(Point(0, 0, axis_length + 1)));
-    pz.lineTo(Adjust(Point(tick_length / 2, 0, axis_length)));
-    pz.lineTo(Adjust(Point(-tick_length / 2, 0, axis_length)));
-    p.drawPath(pz);
-    p.drawText(Adjust(Point(0, 1, axis_length + 1.5)), "Z");
 }
 
 void PlotArea::drawFigure(QPainter& p)
@@ -201,6 +104,9 @@ void PlotArea::drawFigure(QPainter& p)
         p.drawPath(ph1);
         p.drawPath(ph2);
     }
+    p.drawText(Adjust(Point(axis_length + 1.5, 1, 0)), "X");
+    p.drawText(Adjust(Point(0, axis_length + 1.5, 0)), "Y");
+     p.drawText(Adjust(Point(0, 1, axis_length + 1.5)), "Z");
 }
 void PlotArea::TransformFigure(Matrix const& transform)
 {
@@ -239,10 +145,8 @@ void PlotArea::paintEvent(QPaintEvent*)
     QPainter pt(this);
     drawBox(pt);
     drawAxis(pt);
-    drawTicks(pt);
-    drawArrows(pt);
     drawFigure(pt);
-    //drawGrid(pt);
+
 }
 void PlotArea::mousePressEvent(QMouseEvent* event)
 {
