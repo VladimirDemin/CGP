@@ -41,10 +41,15 @@ MainWindow::MainWindow(QWidget *parent)
     setMinimumSize(600, 600);
     setWindowTitle("Преобразования 3д объектов");
     area -> SetFigurePoints(
-    {Point(1, 1, 0), Point(1, 5, 0), Point(2, 5, 0), Point(2, 4, 0), Point(3.5, 5, 0), Point(5, 5, 0), Point(2, 3, 0),
-     Point(5, 1, 0), Point(3.5, 1, 0), Point(2, 2, 0), Point(2, 1, 0), Point(1, 1, 0),
-     Point(1, 1, 1), Point(1, 5, 1), Point(2, 5, 1), Point(2, 4, 1), Point(3.5, 5, 1), Point(5, 5, 1), Point(2, 3, 1),
-     Point(5, 1, 1), Point(3.5, 1, 1), Point(2, 2, 1), Point(2, 1, 1), Point(1, 1, 1)});
+    {Point(1, 1, 0), Point(1, 3, 0),Point(2, 3, 0), Point(2, 7, 0), Point(5, 7, 0), Point(5, 3, 0), Point(4, 3, 0), Point(4, 6, 0),
+          Point(3, 6, 0), Point(3, 3, 0), Point(2, 3, 0),Point(2, 7, 0), Point(5, 7, 0), Point(5, 3, 0), Point(6, 3, 0), Point(6, 1, 0),
+     Point(5, 1, 0),Point(5, 2, 0),Point(2, 2, 0),Point(2, 1, 0),Point(1, 1, 0),
+     Point(1, 1, 1), Point(1, 3, 1),Point(2, 3, 1), Point(2, 7, 1), Point(5, 7, 1), Point(5, 3, 1), Point(4, 3, 1), Point(4, 6, 1),
+               Point(3, 6, 1), Point(3, 3, 1), Point(2, 3, 1),Point(2, 7, 1), Point(5, 7, 1), Point(5, 3, 1), Point(6, 3, 1), Point(6, 1, 1),
+          Point(5, 1, 1),Point(5, 2, 1),Point(2, 2, 1),Point(2, 1, 1),Point(1, 1, 1),
+
+
+                });
 }
 
 MainWindow::~MainWindow()
@@ -227,45 +232,6 @@ void MainWindow::on_TranslateButton_clicked()
     delete d;
     delete val;
 }
-
-
-/*void MainWindow::on_ProjectionButton_clicked()
-{
-    QDialog *d = new QDialog;
-    QLabel *labels[3];
-    PlotArea *areas[3];
-    // f - OXY, h - OXZ, p - OYZ
-    QString prompts[3] = {"Фронтальная", "Горизонтальная", "Профильная"};
-    d -> setStyleSheet("background-color: white");
-    for (int i = 0; i < 3; ++i)
-    {
-        labels[i] = new QLabel(prompts[i] + " проекция:");
-        labels[i] -> setStyleSheet("color: black");
-        areas[i] = new PlotArea();
-        areas[i] -> SetRotatable(false);
-    }
-    areas[0] -> SetRotation(0, -M_PI / 2, 0);
-    areas[1] -> SetRotation(M_PI / 2, 0, 0);
-    QGridLayout *g = new QGridLayout(d);
-    g -> addWidget(labels[0], 0, 0, 1, 1);
-    g -> addWidget(labels[1], 0, 4, 1, 1);
-    g -> addWidget(labels[2], 0, 8, 1, 1);
-    g -> addWidget(areas[0], 1, 0, 4, 4);
-    g -> addWidget(areas[1], 1, 4, 4, 4);
-    g -> addWidget(areas[2], 1, 8, 4, 4);
-    d -> exec();
-    for (int i = 0; i < 3; ++i)
-    {
-        delete labels[i];
-        delete areas[i];
-        labels[i] = nullptr;
-        areas[i] = nullptr;
-    }
-    delete g;
-    delete d;
-}*/
-
-
 void MainWindow::on_ProjectionOXY_clicked()
 {
     area -> RevertProjection();
