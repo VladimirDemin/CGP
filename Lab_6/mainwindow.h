@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "plotarea.h"
+#include "graph.h"
 #include "matrix.h"
 
 QT_BEGIN_NAMESPACE
